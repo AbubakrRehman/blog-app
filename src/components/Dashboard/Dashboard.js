@@ -1,36 +1,35 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Container, Form } from 'react-bootstrap'
 import AuthContext from '../context/AuthProvider';
+import { fetchWithBase, fetchWithBaseAndTokenPost } from "../utility/api_call.js"
 
 function Dashboard() {
     const [blogs, setBlogs] = useState([]);
     const { auth, setAuth } = useContext(AuthContext);
     const [selectedCategoryId, setSelectedCategoryId] = useState(0);
     const [categories, setCategories] = useState([]);
+    const [formValues, setFormValues] = useState({
+        title: "",
+        blog: ""
+    });
 
     useEffect(() => {
-        const fetchBlogs = async () => {
-            const blogResponse = await fetch(`http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api/user/${auth.userId}/blogs?pageNumber=0&pageSize=4&sortBy=title`)
-            const blogResponseJson = await blogResponse.json();
-            return blogResponseJson.blogs;
-        }
-
-        fetchBlogs().then((blogs) => {
-            console.log('blogs', blogs);
-            setBlogs(blogs);
-        });
 
 
-        const fetchCategories = async () => {
-            const categoriesResponse = await fetch(`http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api/categories`)
-            const categoriesResponseJson = await categoriesResponse.json();
-            return categoriesResponseJson;
-        }
 
-        fetchCategories().then((categories) => {
-            console.log("categories", categories);
-            setCategories(categories);
-        })
+
+        fetchWithBase(`/user/${auth.userId}/blogs?pageNumber=0&pageSize=10&sortBy=blogId&sortDir=asc`)
+            .then((blogs) => {
+                console.log('blogs: ', blogs.blogs);
+                setBlogs(blogs.blogs);
+            })
+
+
+        fetchWithBase("/categories")
+            .then((categories) => {
+                console.log('categories', categories);
+                setCategories(categories);
+            })
 
 
     }, []);
@@ -45,28 +44,33 @@ function Dashboard() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api/user/${auth.userId}/category/${selectedCategoryId}/blogs`)
-            .then((res) => res.json())
+        fetchWithBaseAndTokenPost(`/user/${auth.userId}/category/${selectedCategoryId}/blogs`, auth.token,formValues)
             .then((jsonRes) => console.log(jsonRes))
-            .catch((err)=>{
+            .catch((err) => {
                 console.log("Internal Server Error");
             })
 
     }
 
 
+    const handleFormInputChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        const tempFormValues = { ...formValues, [name]: value };
+        setFormValues(tempFormValues);
+    }
 
     return (
         <Container>
             <div>
                 <Form onSubmit={(e) => handleSubmit(e)}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="name@example.com" />
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control onChange={(e) => handleFormInputChange(e)} value={formValues.name} name="title" type="text" placeholder="Enter title for blog" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                        <Form.Label>Example textarea</Form.Label>
-                        <Form.Control as="textarea" rows={3} />
+                        <Form.Label>Blog</Form.Label>
+                        <Form.Control onChange={(e) => handleFormInputChange(e)} value={formValues.blog} name="blog" placeholder="Enter blog" as="textarea" rows={3} />
                     </Form.Group>
                     <div>
                         <div>Category</div>
@@ -85,7 +89,7 @@ function Dashboard() {
                     </div>
                     <Button type="submit">Submit</Button>
                 </Form>
-
+                <hr />
             </div>
             {blogs.length ?
                 blogs.map((blog, blogIndex) => {

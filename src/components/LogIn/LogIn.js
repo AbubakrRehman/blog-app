@@ -43,6 +43,7 @@ function LogIn() {
             const loginResponse = await loginCall();
             console.log(loginResponse);
             if (!loginResponse.statusCode) {
+                console.log(loginResponse);
                 setAuth(loginResponse);
                 navigate("/dashboard",{state:location,replace:true});
             }else{

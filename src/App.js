@@ -20,14 +20,14 @@ function App() {
         <BrowserRouter>
           <Routes>
             {/* public routes */}
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/signup" element={<SignUp />} />
+             <Route path="/login" element={<LogIn />} />
+            {/* <Route path="/signup" element={<SignUp />} />  */}
             <Route path="/" element={<Home />} />
 
 
             {/* private routes */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin" element={<Admin />} />
+             <Route path="/dashboard" element={<Dashboard />} />
+            {/* <Route path="/admin" element={<Admin />} />  */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>
