@@ -5,7 +5,7 @@ import SignUp from './components/SignUp/SignUp';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LogIn from './components/LogIn/LogIn';
 import { AuthProvider } from './components/context/AuthProvider';
-import { BrowserRouter,Routes ,Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './components/Home/Home';
 import Dashboard from './components/Dashboard/Dashboard';
 import Admin from './components/Admin/Admin';
@@ -15,19 +15,23 @@ function App() {
     <div className="App">
       {/* <Header/> */}
       {/* <SignUp/> */}
-    
-        <AuthProvider>
+
+      <AuthProvider>
         <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LogIn/>}/>
-          <Route path="/signup" element={<SignUp/>}/>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/admin" element={<Admin/>}/>
+          <Routes>
+            {/* public routes */}
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/" element={<Home />} />
+
+
+            {/* private routes */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      
+        </BrowserRouter>
+      </AuthProvider>
+
     </div>
   );
 }
