@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Form, Button, Container } from "react-bootstrap";
 import AuthContext from '../context/AuthProvider';
 import { useNavigate,useLocation } from "react-router-dom";
+import { fetchWithBasePost } from '../utility/api_call';
 
 function LogIn() {
     const { auth, setAuth } = useContext(AuthContext);
@@ -40,7 +41,7 @@ function LogIn() {
 
         e.preventDefault();
         try {
-            const loginResponse = await loginCall();
+            const loginResponse = await fetchWithBasePost("/auth/login",formValues);
             console.log(loginResponse);
             if (!loginResponse.statusCode) {
                 console.log(loginResponse);

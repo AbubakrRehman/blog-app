@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './components/Home/Home';
 import Dashboard from './components/Dashboard/Dashboard';
 import Admin from './components/Admin/Admin';
+import BlogItem from './components/BlogItem/BlogItem';
+import Profile from './components/Profile/Profile';
 
 function App() {
   return (
@@ -18,16 +20,21 @@ function App() {
 
       <AuthProvider>
         <BrowserRouter>
+        <Header/>
           <Routes>
             {/* public routes */}
              <Route path="/login" element={<LogIn />} />
-            {/* <Route path="/signup" element={<SignUp />} />  */}
+            <Route path="/signup" element={<SignUp />} /> 
+            
             <Route path="/" element={<Home />} />
+            <Route path="/:blogId" element={<BlogItem />} />
+           
 
 
             {/* private routes */}
              <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/admin" element={<Admin />} />  */}
+            <Route path="/admin" element={<Admin />} /> 
+            <Route path="/profile" element={<Profile />} /> 
           </Routes>
         </BrowserRouter>
       </AuthProvider>

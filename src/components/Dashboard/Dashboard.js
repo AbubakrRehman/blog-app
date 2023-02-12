@@ -10,15 +10,16 @@ function Dashboard() {
     const [categories, setCategories] = useState([]);
     const [formValues, setFormValues] = useState({
         title: "",
-        blog: ""
+        content: ""
     });
+    const [_, set_] = useState(null);
 
     useEffect(() => {
 
 
 
 
-        fetchWithBase(`/user/${auth.userId}/blogs?pageNumber=0&pageSize=10&sortBy=blogId&sortDir=asc`)
+        fetchWithBase(`/user/${auth.userId}/blogs?pageNumber=0&pageSize=20&sortBy=blogId&sortDir=asc`)
             .then((blogs) => {
                 console.log('blogs: ', blogs.blogs);
                 setBlogs(blogs.blogs);
@@ -32,7 +33,7 @@ function Dashboard() {
             })
 
 
-    }, []);
+    }, [_]);
 
 
     const handleSelectChange = (e) => {
@@ -44,8 +45,11 @@ function Dashboard() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchWithBaseAndTokenPost(`/user/${auth.userId}/category/${selectedCategoryId}/blogs`, auth.token,formValues)
-            .then((jsonRes) => console.log(jsonRes))
+        fetchWithBaseAndTokenPost(`/user/${auth.userId}/category/${selectedCategoryId}/blogs`, auth.token, formValues)
+            .then((jsonRes) => {
+                console.log(jsonRes);
+                set_("");
+            })
             .catch((err) => {
                 console.log("Internal Server Error");
             })
@@ -66,11 +70,11 @@ function Dashboard() {
                 <Form onSubmit={(e) => handleSubmit(e)}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control onChange={(e) => handleFormInputChange(e)} value={formValues.name} name="title" type="text" placeholder="Enter title for blog" />
+                        <Form.Control onChange={(e) => handleFormInputChange(e)} value={formValues.title} name="title" type="text" placeholder="Enter title for blog" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Blog</Form.Label>
-                        <Form.Control onChange={(e) => handleFormInputChange(e)} value={formValues.blog} name="blog" placeholder="Enter blog" as="textarea" rows={3} />
+                        <Form.Control onChange={(e) => handleFormInputChange(e)} value={formValues.content} name="content" placeholder="Enter blog" as="textarea" rows={3} />
                     </Form.Group>
                     <div>
                         <div>Category</div>
@@ -99,7 +103,7 @@ function Dashboard() {
                         <div>Author: {blog.user.firstName}</div>
                         <div>Content: {blog.content}</div>
                         <div>Date: {blog.bloggedDate}</div>
-                        <div>Comment: {blog.comments.length === 0 ? "No comments avaialble yet" : blog.comments}</div>
+                        <div>Comment: {blog.comments.length === 0 ? "No comments avaialble yet" : JSON.stringify(blog.comments)}</div>
                         <hr />
                     </div>
                 })

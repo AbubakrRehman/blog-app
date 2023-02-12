@@ -1,9 +1,23 @@
 
 
 const fetchWithBase = async (url) => {
-    // http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api/user/1/blogs?pageNumber=0&pageSize=10&sortBy=blogId&sortDir=asc
-    const BASE_URL = "http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api";
+    const BASE_URL = "http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api";
     const response = await fetch(`${BASE_URL}${url}`);
+    const JsonResponse = await response.json();
+    return JsonResponse;
+
+}
+
+const fetchWithBasePost = async (url,body) => {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    }
+    const BASE_URL = "http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api";
+    const response = await fetch(`${BASE_URL}${url}`,options);
     const JsonResponse = await response.json();
     return JsonResponse;
 
@@ -12,14 +26,15 @@ const fetchWithBase = async (url) => {
 
 
 const fetchWithBaseAndTokenPost = async (url, jwt, body) => {
-    const BASE_URL = "http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api";
+    const BASE_URL = "http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api";
+    
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${jwt}`,
-            'body': JSON.stringify(body)
-        }
+        },
+        body: JSON.stringify(body)
     }
     const response = await fetch(`${BASE_URL}${url}`, options);
     const JsonResponse = await response.json();
@@ -28,4 +43,4 @@ const fetchWithBaseAndTokenPost = async (url, jwt, body) => {
 }
 
 
-export { fetchWithBase, fetchWithBaseAndTokenPost };
+export { fetchWithBase, fetchWithBaseAndTokenPost,fetchWithBasePost };

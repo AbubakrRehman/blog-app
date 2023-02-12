@@ -6,14 +6,14 @@ function Admin() {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const UsersResponse = await fetch(`http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api/users`)
-            const UsersResponseJson = await UsersResponse.json();
-            return UsersResponseJson;
-        }
+        // const fetchUsers = async () => {
+        //     const UsersResponse = await fetch(`http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api/users`)
+        //     const UsersResponseJson = await UsersResponse.json();
+        //     return UsersResponseJson;
+        // }
 
         const fetchCategories = async () => {
-            const categoriesResponse = await fetch(`http://blogapp-env-1.eba-9pgxeyhe.ap-south-1.elasticbeanstalk.com/api/categories`)
+            const categoriesResponse = await fetch(`http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api/categories`)
             const categoriesResponseJson = await categoriesResponse.json();
             return categoriesResponseJson;
         }
@@ -23,10 +23,10 @@ function Admin() {
         });
 
 
-        fetchUsers().then((users) => {
-            console.log('users', users);
-            setUsers(users);
-        });
+        // fetchUsers().then((users) => {
+        //     console.log('users', users);
+        //     setUsers(users);
+        // });
 
 
     }, [])
@@ -49,7 +49,7 @@ function Admin() {
                 })}
 
             </div>
-            <div>
+            {/* <div>
             <h1>Users</h1>
                 {users.map((user, userIndex) => {
                     return <div key={user.userId}>
@@ -64,7 +64,7 @@ function Admin() {
                     </div>
                 })}
 
-            </div>
+            </div> */}
         </Container>
     )
 }

@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
-import { Button, Container, Form, InputGroup } from 'reactstrap';
-import { fetchWithBase } from "../utility/api_call.js"
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
+import { Container, Form, InputGroup } from 'reactstrap';
+import { fetchWithBase } from "../utility/api_call.js";
+import { Button } from 'react-bootstrap';
+import AuthContext from '../context/AuthProvider.js';
 function Home() {
     const location = useLocation();
     const [blogs, setBlogs] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState("");
+    const { auth, setAuth } = useContext(AuthContext);
 
 
     useEffect(() => {
@@ -73,19 +76,30 @@ function Home() {
                     </select>
                 </div>
             </div>
-            <hr/>
+            <hr />
 
             {blogs.length ?
                 blogs.map((blog, blogIndex) => {
-                    return <div key={blog.blogId}>
-                        <div>Category: {blog.category.categoryTitle}</div>
-                        <div>Title: {blog.title}</div>
-                        <div>Author: {blog.user.firstName}</div>
-                        <div>Content: {blog.content}</div>
-                        <div>Date: {blog.bloggedDate}</div>
-                        <div>Comment: {blog.comments.length === 0 ? "No comments avaialble yet" : blog.comments}</div>
-                        <hr />
-                    </div>
+                    return <NavLink to={`/${blog.blogId}`} style={{ textDecoration: "none", color: "InfoText" }} key={blog.blogId}>
+                        <div >
+                            {/* <div>Category: {blog.category.categoryTitle}</div> */}
+                            <div>Title: {blog.title}</div>
+                            {/* <div>Author: {blog.user.firstName}</div> */}
+                            <div>Content: {blog.content}</div>
+                            {/* <div>Date: {blog.bloggedDate}</div> */}
+                            {/* <div>Comment: {blog.comments.length === 0 ? "No comments avaialble yet" : blog.comments}</div> */}
+                            {Object.keys(auth).length && auth.userId===blog.user.userId?
+                                <div>
+                                    <Button>Delete</Button>
+                                    <span>  </span>
+                                    <Button>Edit</Button>
+                                </div>
+                                :
+                                ""
+                            }
+                            <hr />
+                        </div>
+                    </NavLink>
                 })
                 :
                 <div>No blogs available</div>
