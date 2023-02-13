@@ -25,6 +25,26 @@ const fetchWithBasePost = async (url,body) => {
 
 
 
+
+
+const fetchWithBaseAndTokenDelete = async (url, jwt) => {
+    const BASE_URL = "http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api";
+    
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwt}`,
+        },
+    }
+    const response = await fetch(`${BASE_URL}${url}`, options);
+    const JsonResponse = await response.json();
+    return JsonResponse;
+
+}
+
+
+
 const fetchWithBaseAndTokenPost = async (url, jwt, body) => {
     const BASE_URL = "http://blogapp-env.eba-zrcpsce5.ap-south-1.elasticbeanstalk.com/api";
     
@@ -43,4 +63,4 @@ const fetchWithBaseAndTokenPost = async (url, jwt, body) => {
 }
 
 
-export { fetchWithBase, fetchWithBaseAndTokenPost,fetchWithBasePost };
+export { fetchWithBase, fetchWithBaseAndTokenPost,fetchWithBasePost ,fetchWithBaseAndTokenDelete};

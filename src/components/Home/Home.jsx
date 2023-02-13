@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { Container, Form, InputGroup } from 'reactstrap';
-import { fetchWithBase } from "../utility/api_call.js";
+import { fetchWithBase, fetchWithBaseAndTokenDelete, fetchWithBaseDelete } from "../utility/api_call.js";
 import { Button } from 'react-bootstrap';
 import AuthContext from '../context/AuthProvider.js';
 function Home() {
@@ -11,6 +11,7 @@ function Home() {
     const [selectedCategoryId, setSelectedCategoryId] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState("");
     const { auth, setAuth } = useContext(AuthContext);
+    const [_, set_] = useState(null);
 
 
     useEffect(() => {
@@ -55,11 +56,21 @@ function Home() {
             })
     }
 
+    const handleDeleteButtonClick = (e,blogId) => {
+        fetchWithBaseAndTokenDelete(`/blogs/${blogId}`,auth.token)
+            .then((deleteResult) => {
+                console.log('Search Result', deleteResult);
+                set_("");
+            })
+    }
+
+
+
     return (
         <Container>
             <div>
                 <input placeholder="Search by blog title" type="text" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
-                <Button onClick={(e) => handleSearchButtonClick(e, searchKeyword)}> Search</Button>
+                <Button onClick={(e) => handleSearchButtonClick(e, searchKeyword)}> Search </Button>
             </div>
             <div>
                 <div>Category</div>
@@ -80,26 +91,25 @@ function Home() {
 
             {blogs.length ?
                 blogs.map((blog, blogIndex) => {
-                    return <NavLink to={`/${blog.blogId}`} style={{ textDecoration: "none", color: "InfoText" }} key={blog.blogId}>
-                        <div >
-                            {/* <div>Category: {blog.category.categoryTitle}</div> */}
-                            <div>Title: {blog.title}</div>
-                            {/* <div>Author: {blog.user.firstName}</div> */}
-                            <div>Content: {blog.content}</div>
-                            {/* <div>Date: {blog.bloggedDate}</div> */}
-                            {/* <div>Comment: {blog.comments.length === 0 ? "No comments avaialble yet" : blog.comments}</div> */}
-                            {Object.keys(auth).length && auth.userId===blog.user.userId?
-                                <div>
-                                    <Button>Delete</Button>
-                                    <span>  </span>
-                                    <Button>Edit</Button>
-                                </div>
-                                :
-                                ""
-                            }
-                            <hr />
-                        </div>
-                    </NavLink>
+                    return <div >
+                       
+                        <div>Title: {blog.title}</div>
+                       
+                        <div>Content: {blog.content}</div>
+                     
+                        <NavLink className="btn btn-success" to={`/${blog.blogId}`}  key={blog.blogId}>Read More</NavLink>
+                        {Object.keys(auth).length && auth.userId === blog.user.userId ?
+                            <div>
+                                <Button onClick={(e) =>  handleDeleteButtonClick(e,blog.blogId)}>Delete</Button>
+                                <span>  </span>
+                                <Button onClick={(e) => console.log("Hello!!")}>Edit</Button>
+                            </div>
+                            :
+                            ""
+                        }
+                        <hr />
+                    </div>
+
                 })
                 :
                 <div>No blogs available</div>
