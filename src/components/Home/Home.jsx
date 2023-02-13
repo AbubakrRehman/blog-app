@@ -25,7 +25,7 @@ function Home() {
             setCategories(categories);
         })
 
-    }, [])
+    }, [_])
 
 
     useEffect(() => {
@@ -91,7 +91,7 @@ function Home() {
 
             {blogs.length ?
                 blogs.map((blog, blogIndex) => {
-                    return <div >
+                    return <div key={blog.blogId}>
                        
                         <div>Title: {blog.title}</div>
                        
